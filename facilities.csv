@@ -1,0 +1,7 @@
+facility_id,facility_name,state,lga,facility_type
+FAC-01,Brightfield Medical Centre,Lagos,Zone A,General Hospital
+FAC-02,Greenleaf Community Health Centre,Lagos,Zone B,PHC
+FAC-03,Hopeville Primary Health Clinic,Lagos,Zone C,Clinic
+FAC-04,Silverstone General Hospital,Abuja,Zone D,General Hospital
+FAC-05,Crestview District Hospital,Abuja,Zone E,General Hospital
+FAC-06,Maplewood Community Clinic,Abuja,Zone F,Clinic

@@ -1,0 +1,7 @@
+facility_id,year,testing_target,art_initiation_rate_target,viral_suppression_rate_target
+FAC-01,2024,1440,0.9,0.9
+FAC-02,2024,720,0.9,0.9
+FAC-03,2024,600,0.9,0.9
+FAC-04,2024,1200,0.9,0.9
+FAC-05,2024,960,0.9,0.9
+FAC-06,2024,480,0.9,0.9
