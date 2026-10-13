@@ -38,6 +38,50 @@ Specific goals:
 * Prove the live update works by changing the data source and watching the dashboard respod.
 
 ## About the Dataset
+Five CSV files, representing EndHIV Foundation's programme data. The patient records are synthetic.
+* patients.csv (400 patients): one row per patient, with demographics, regimen, treatment status, and appointment and follow-up data.
+* viral_load_tests.csv (737 tests): one row per viral load test. A patient can have several tests over time.
+* facilities.csv (6 facilities): a lookup table with name, state, LGA and facility type.
+* pharmacy_stock.csv (216 rows): monthly stock per facility and drug, including opening, received, dispensed and closing stock, and stockout days.
+* targets.csv (6 rows): 2024 testing, ART initiation and viral suppression targets per facility.
+The six facilities are Brightfield Medical Centre, Greenleaf Community Health Centre, Hopeville Primary Health Clinic, Silverstone General Hospital, Crestview District Hospital and Maplewood Community Clinic.
+
+Three ART regimens appear in the data: TLD, TLE and ABC+3TC+LPV/r.
+
+## Tools Used
+* Power BI Desktop: data modeling, DAX measures and report design
+* Power Query: data cleaning and transformation
+
+## Importing the Dataset
+The five CSV files were loaded into Power BI through Get Data, then opened in Power Query to check column types and clean the data before loading.
+
+## Data Cleaning and Transformation
+
+## Data Modeling
+The five tables are linked as a star-style model with facilities as the central lookup.
+<img width="1591" height="785" alt="Screenshot (259)" src="https://github.com/user-attachments/assets/5671aaba-f1dd-4a84-a88b-ca23e1cd4c24" />
+* facilities to patients: one to many, linked on facility_id.
+* facilities to pharmacy_stock: one to many, linked on facility_id.
+* facilities to targets: one to one, linked on facility_id.
+* patients to viral_load_tests: one to many, linked on patient_id.
+* DateTable to patients: one to many, linked on art_start_date
+Why it's built this way: a patient can have several viral load tests, so tests sit on the "many" side. Facility is the shared dimension, which is what lets every page be filtered or split by facility. Targets are one row per facility per year, so they join one to one.
+
+## Data Analysis
+
+## Data Visualization
+
+## Key Insights
+
+## Recommendations
+
+## Limitations
 
 ## Conclusion
 The dashboard gives EndHIV Foundation one place to see programme performance and removes the manual copy-and-paste reporting process. The data points to three priorities: viral suppression and ART initiation are well below the 90% targets, one in four patients misses appointments with incomplete follow-up, and TLD stockouts at two facilities need attention. Because the report reads from a cloud data source, leadership can see these numbers update as new data comes in.
+
+## Project Files
+
+## Contact Information
+Email: aladeloyeesther616@gmail.com
+LinkedIn: https://linkedin.com/in/estheraderonke
