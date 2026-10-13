@@ -143,11 +143,11 @@ The dashboard gives EndHIV Foundation one place to see programme performance and
 [View Power BI report](./EndHIV_Foundation_Power_BI_report.pbix)
 
 EndHIV Foundation Datasets
-[Patients Dataset](./patients.csv)
-[Facilities Dataset](./facilities.csv)
-[Pharmacy Stock Dataset](./pharmacy_stock.csv)
-[Targets Dataset](./targets.csv)
-[Viral Load Tests Dataset](./viral_load_tests.csv)
+* [Patients Dataset](./patients.csv)
+* [Facilities Dataset](./facilities.csv)
+* [Pharmacy Stock Dataset](./pharmacy_stock.csv)
+* [Targets Dataset](./targets.csv)
+* [Viral Load Tests Dataset](./viral_load_tests.csv)
 
 ## Contact Information
 * Email: aladeloyeesther616@gmail.com
