@@ -140,7 +140,15 @@ The dashboard has four pages.
 The dashboard gives EndHIV Foundation one place to see programme performance and removes the manual copy-and-paste reporting process. The data points to three priorities: viral suppression and ART initiation are well below the 90% targets, one in four patients misses appointments with incomplete follow-up, and TLD stockouts at two facilities need attention. Because the report reads from a cloud data source, leadership can see these numbers update as new data comes in.
 
 ## Project Files
+[View Power BI report](./EndHIV_Foundation_Power_BI_report.pbix)
+
+EndHIV Foundation Datasets
+[Patients Dataset](./patients.csv)
+[Facilities Dataset](./facilities.csv)
+[Pharmacy Stock Dataset](./pharmacy_stock.csv)
+[Targets Dataset](./targets.csv)
+[Viral Load Tests Dataset](./viral_load_tests.csv)
 
 ## Contact Information
-Email: aladeloyeesther616@gmail.com
-LinkedIn: https://linkedin.com/in/estheraderonke
+* Email: aladeloyeesther616@gmail.com
+* LinkedIn: https://linkedin.com/in/estheraderonke
