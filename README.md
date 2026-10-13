@@ -44,6 +44,7 @@ Five CSV files, representing EndHIV Foundation's programme data. The patient rec
 * facilities.csv (6 facilities): a lookup table with name, state, LGA and facility type.
 * pharmacy_stock.csv (216 rows): monthly stock per facility and drug, including opening, received, dispensed and closing stock, and stockout days.
 * targets.csv (6 rows): 2024 testing, ART initiation and viral suppression targets per facility.
+
 The six facilities are Brightfield Medical Centre, Greenleaf Community Health Centre, Hopeville Primary Health Clinic, Silverstone General Hospital, Crestview District Hospital and Maplewood Community Clinic.
 
 Three ART regimens appear in the data: TLD, TLE and ABC+3TC+LPV/r.
@@ -73,6 +74,7 @@ The five tables are linked as a star-style model with facilities as the central 
 * facilities to targets: one to one, linked on facility_id.
 * patients to viral_load_tests: one to many, linked on patient_id.
 * DateTable to patients: one to many, linked on art_start_date.
+
 Why it's built this way: a patient can have several viral load tests, so tests sit on the "many" side. Facility is the shared dimension, which is what lets every page be filtered or split by facility. Targets are one row per facility per year, so they join one to one.
 
 ## Data Analysis
@@ -85,6 +87,7 @@ Key measures built in DAX:
 * % Suppressed (Latest): Latest Suppressed ÷ patients tested.
 * ART Initiation Rate %: Total patient to start ART with 7 days ÷ Total patients
 * Missed Appointments, Follow-Up Calls Made, Returned After Call: counts that feed the follow-up funnel.
+
 Suppression is measured on each patient's latest test, not across every test. This avoids counting one patient several times and gives a better picture of who is suppressed today.
 
 DAX
