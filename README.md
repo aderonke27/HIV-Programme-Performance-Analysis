@@ -53,9 +53,14 @@ Three ART regimens appear in the data: TLD, TLE and ABC+3TC+LPV/r.
 * Power Query: data cleaning and transformation
 
 ## Importing the Dataset
-The five CSV files were loaded into Power BI through Get Data, then opened in Power Query to check column types and clean the data before loading.
+The five datasets were imported as CSV files and were loaded into Power BI through Get Data, then opened in Power Query for cleaning before loading for analysis and visualization.
 
 ## Data Cleaning and Transformation
+* Blank rows in patients.csv. The file contains 20 empty rows beyond the 400 real patient records. These were removed so they didn't inflate counts or distort rates.
+* Date columns stored as text. Columns such as date_of_diagnosis, art_start_date, last_appointment_date and test_date were converted to proper date types so they could connect to a date table.
+* Intentional blanks in the follow-up columns. follow_up_call_made and returned_after_follow_up are blank (or "N/A") for patients who kept their last appointment.These were left as they are, since the blank carries meaning: no follow-up was needed.
+* Month names as text. Month fields (test_month, month in the stock file) were text. I added sort columns (test month sort, Month Sort) so charts display January to December in order and not alphabetically.
+* Calculated columns. A DateTable was created for time filtering, plus helper columns such as Days Until Due and Due This Month for refill and review tracking.
 
 ## Data Modeling
 The five tables are linked as a star-style model with facilities as the central lookup.
@@ -68,14 +73,65 @@ The five tables are linked as a star-style model with facilities as the central 
 Why it's built this way: a patient can have several viral load tests, so tests sit on the "many" side. Facility is the shared dimension, which is what lets every page be filtered or split by facility. Targets are one row per facility per year, so they join one to one.
 
 ## Data Analysis
+Key measures built in DAX (all explained and reproducible, per the programme's AI use policy):
+
+Total Patients: count of patient records. Result: 400.
+Active Patients: patients with treatment status "Active". Result: 311.
+Retention Rate %: Active ÷ (Active + LTFU). Result: 87.11%.
+Total viral load tests: count of all tests. Result: 737.
+Latest Suppressed: patients whose most recent test was suppressed. Result: 287.
+% Suppressed (Latest): Latest Suppressed ÷ patients tested. Result: 71.75%.
+ART Initiation Rate %: [ADD: your definition]. Result: 48.89% to 58.57% by facility.
+Missed Appointments, Follow-Up Calls Made, Returned After Call: counts that feed the follow-up funnel. Result: 103, 77 and 51.
+
+Suppression is measured on each patient's latest test, not across every test. This avoids counting one patient several times and gives a better picture of who is suppressed today.
+
+[ADD: paste your actual DAX for each measure below, with a one-line explanation.]
+
+DAX
+-- Example layout. Replace with your own measures.
+Retention rate % =
+DIVIDE(
+    CALCULATE(COUNTROWS(patients), patients[treatment_status] = "Active"),
+    CALCULATE(COUNTROWS(patients), patients[treatment_status] IN {"Active", "LTFU"})
+)
 
 ## Data Visualization
+The dashboard has four pages.
+* HIV Programme Overview: Headline cards (total patients, active patients, retention rate), a treatment status donut, ART initiation and retention by facility, and a colour-coded table comparing each facility's suppression, ART initiation and testing against target. A date slicer filters by month.
+<img width="1421" height="806" alt="Screenshot (251)" src="https://github.com/user-attachments/assets/60d7eee8-2037-4768-b4f3-d251c62b3128" />
+* Viral Load Testing & Suppression: Total tests, suppressed patients and suppression rate, then a breakdown by facility and two trend lines showing tests and suppression over time.
+<img width="1436" height="808" alt="Screenshot (252)" src="https://github.com/user-attachments/assets/fcbbdf02-b85e-4dbc-8f09-88aa696a37c4" />
+* ART Stock & Appointment Follow-up: Current stock per facility (filterable by drug), stockout days by facility (filterable by month), dispensing trends by regimen, appointment attendance, and a funnel from missed appointments to follow-up calls to patients who returned.
+<img width="1428" height="810" alt="Screenshot (253)" src="https://github.com/user-attachments/assets/90931222-4bee-4765-848a-32bfe49debb9" />
+* Patient Demographics: Patients by facility, regimen, gender and age group, with suppression and retention rates split by gender and age group.
+<img width="1457" height="817" alt="Screenshot (261)" src="https://github.com/user-attachments/assets/4c91286b-5341-4b29-8f0a-d9118fea64c3" />
 
 ## Key Insights
+* No facility is close to its suppression target. Every facility has a 90% viral suppression target. The best performer, Crestview District Hospital, sits at 77.14%, and the worst, Maplewood Community Clinic, at 63.33%. Overall suppression is 71.75%.
+* ART initiation is the biggest gap against target. Against a 90% target, facilities range from 48.89% (Silverstone General Hospital) to 58.57% (Crestview District Hospital). Silverstone is the largest facility after Brightfield, so its low rate affects a lot of patients.
+* One in four appointments is missed, and follow-up is leaving patients behind. 103 patients (25.75%) missed their last appointment. Only 77 received a follow-up call, and 51 returned. That means 26 missed patients were never called at all, and 49.5% of all missed patients came back. Among those who were called, about two in three returned, so the calls work. The gap is that not everyone gets one.
+* Missed appointments are concentrated in a few facilities. Hopeville has the highest missed rate (about 36% of its patients), followed by Brightfield (about 31%) and Maplewood (30%).
+* Brightfield has the weakest retention. At 82.83%, it has the lowest retention rate and the most patients lost to follow-up (17). It also has the largest patient load (110).
+* Stockouts are limited to one drug at two facilities. Hopeville recorded 30 stockout days and Maplewood 22, both for TLD, the most widely used regimen (229 of 400 patients). The other four facilities had none. Hopeville and Maplewood are also two of the weaker performers on missed appointments, so supply and attendance may be linked.
+* Seniors are suppressed least but retained best. Patients aged 50+ have the lowest suppression (66.67%) and the highest retention (90.00%). Paediatric patients have the lowest retention (83.33%). Gender differences in suppression are small (71.92% female vs 71.43% male).
+* Suppression trends upward on the dashboard. The suppression rate over time line rises from early 2023 through late 2024, with a dip around July 2024.
 
 ## Recommendations
+* Make follow-up calls universal. Set a rule that every missed appointment gets a call within a fixed number of days. Closing the 26-patient gap is the most direct way to lift retention.
+* Focus ART initiation efforts on Silverstone and the other low performers. A rate near 50% against a 90% target points to delays between linkage and treatment start. Review that process facility by facility.
+* Prioritise TLD supply at Hopeville and Maplewood. Both ran out of the main regimen. Early reorder triggers would help avoid more stockout days.
+* Run a viral load catch-up at Maplewood and Brightfield. They have the lowest suppression rates, so enhanced adherence counselling and repeat testing should go there first.
+* Check retention support for Brightfield and for paediatric patients. They have the lowest retention in their groups.
+* Review targets alongside results. Targets are set at 90% everywhere. If no facility is near them, leadership may want to agree interim milestones so progress is visible.
 
 ## Limitations
+* Targets are annual in the data. targets.csv holds one annual target per facility, so monthly targets couldn't be shown. The Targets vs Actuals view on the overview page compares against annual figures.
+* Testing target comparison mixes years. "Tests Done" counts tests across 2023 and 2024 (737), while the testing target is for 2024 only. Only 365 tests fall in 2024, so the true gap to target is larger than the table suggests. [CONFIRM and adjust if you filtered by year.]
+* Pharmacy data covers 2024 only, so stock trends can't be compared with earlier years.
+* Viral load data has no 2024 December tests. The last test date is 29 November 2024, so December is missing from the trend lines.
+* Patients due for refill or review. The model includes Days Until Due and Due This Month columns, but this isn't shown as its own visual yet. [EDIT if you've added it.]
+* Synthetic data. Some patterns may not reflect real programme behaviour.
 
 ## Conclusion
 The dashboard gives EndHIV Foundation one place to see programme performance and removes the manual copy-and-paste reporting process. The data points to three priorities: viral suppression and ART initiation are well below the 90% targets, one in four patients misses appointments with incomplete follow-up, and TLD stockouts at two facilities need attention. Because the report reads from a cloud data source, leadership can see these numbers update as new data comes in.
