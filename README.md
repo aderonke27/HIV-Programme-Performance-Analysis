@@ -1,1 +1,19 @@
-## HIV Programme 
+## HIV Programme Performance Analysis
+![Power BI](https://img.shields.io/badge/Tool-Power%20BI-F2C811?style=flat&logo=powerbi&logoColor=black)
+![Domain](https://img.shields.io/badge/Domain-Healthcare%20Analytics-red)
+
+## Table of Contents
+1. [Introductio](#introduction)  
+2. [Project Description](#project-description)
+3. [Project Aim](#project-aim)  
+4. [About the Dataset](#about-the-dataset)
+5. [Tools Used](#tools-used)  
+6. [Importing the Dataset](#importing-the-dataset)  
+7. [Data Cleaning and Transformation](#data-cleaning-and-transformation)
+8. [Data Modeling](#data-modeling)  
+9. [Data Analysis](#data-analysis)  
+10. [Data Visualization](#data-visualization)  
+11. [Key Insights](#key-insights)  
+12. [Recommendations](#recommendations)  
+13. [Conclusion](#conclusion)
+14. [Contact Information](#contact-information)
