@@ -60,7 +60,10 @@ The five datasets were imported as CSV files and were loaded into Power BI throu
 * Date columns stored as text. Columns such as date_of_diagnosis, art_start_date, last_appointment_date and test_date were converted to proper date types so they could connect to a date table.
 * Intentional blanks in the follow-up columns. follow_up_call_made and returned_after_follow_up are blank (or "N/A") for patients who kept their last appointment.These were left as they are, since the blank carries meaning: no follow-up was needed.
 * Month names as text. Month fields (test_month, month in the stock file) were text. I added sort columns (test month sort, Month Sort) so charts display January to December in order and not alphabetically.
-* Calculated columns. A DateTable was created for time filtering, plus helper columns such as Days Until Due and Due This Month for refill and review tracking.
+* Calculated columns. A DateTable was created for time filtering.
+
+Calculated Columns
+* Rapid ART Started = VAR DaysToART = DATEDIFF(patients[date_of_diagnosis], patients[art_start_date], DAY) RETURN IF(DaysToART <= 7, "Yes", "No")
 
 ## Data Modeling
 The five tables are linked as a star-style model with facilities as the central lookup.
@@ -73,28 +76,26 @@ The five tables are linked as a star-style model with facilities as the central 
 Why it's built this way: a patient can have several viral load tests, so tests sit on the "many" side. Facility is the shared dimension, which is what lets every page be filtered or split by facility. Targets are one row per facility per year, so they join one to one.
 
 ## Data Analysis
-Key measures built in DAX (all explained and reproducible, per the programme's AI use policy):
-
-Total Patients: count of patient records. Result: 400.
-Active Patients: patients with treatment status "Active". Result: 311.
-Retention Rate %: Active ÷ (Active + LTFU). Result: 87.11%.
-Total viral load tests: count of all tests. Result: 737.
-Latest Suppressed: patients whose most recent test was suppressed. Result: 287.
-% Suppressed (Latest): Latest Suppressed ÷ patients tested. Result: 71.75%.
-ART Initiation Rate %: [ADD: your definition]. Result: 48.89% to 58.57% by facility.
-Missed Appointments, Follow-Up Calls Made, Returned After Call: counts that feed the follow-up funnel. Result: 103, 77 and 51.
-
+Key measures built in DAX:
+* Total Patients: count of patient records.
+* Active Patients: patients with treatment status "Active".
+* Retention Rate %: Active ÷ (Active + LTFU).
+* Total viral load tests: count of all tests.
+* Latest Suppressed: patients whose most recent test was suppressed.
+* % Suppressed (Latest): Latest Suppressed ÷ patients tested.
+* ART Initiation Rate %: Total patient to start ART with 7 days ÷ Total patients
+* Missed Appointments, Follow-Up Calls Made, Returned After Call: counts that feed the follow-up funnel.
 Suppression is measured on each patient's latest test, not across every test. This avoids counting one patient several times and gives a better picture of who is suppressed today.
 
-[ADD: paste your actual DAX for each measure below, with a one-line explanation.]
-
 DAX
--- Example layout. Replace with your own measures.
-Retention rate % =
-DIVIDE(
-    CALCULATE(COUNTROWS(patients), patients[treatment_status] = "Active"),
-    CALCULATE(COUNTROWS(patients), patients[treatment_status] IN {"Active", "LTFU"})
-)
+* Active patients = CALCULATE(COUNTROWS(patients),patients[treatment_status] = "Active")
+* ART Initiation Rate % = DIVIDE(CALCULATE(COUNTROWS(patients), patients[Rapid ART Started] = "Yes"), COUNTROWS(patients))
+* Missed Appointments = CALCULATE(COUNTROWS(patients), patients[last_appointment_status] = "Missed")
+* Follow-Up Calls Made = CALCULATE(COUNTROWS(patients), patients[follow_up_call_made] = "Yes")
+* Returned After Call = CALCULATE(COUNTROWS(patients), patients[returned_after_follow_up] = "Yes")
+* Retention rate % = DIVIDE([Active patients], CALCULATE(COUNTROWS(patients), patients[treatment_status] IN {"Active", "LTFU"}))
+* Suppressed Patients = CALCULATE(COUNTROWS(viral_load_tests), viral_load_tests[suppressed] = "Yes", FILTER(viral_load_tests,viral_load_tests[test_date] = [Latest Test Date per Patient]))
+* Suppression rate = DIVIDE([Suppressed Patients], [Total Test])
 
 ## Data Visualization
 The dashboard has four pages.
@@ -127,11 +128,10 @@ The dashboard has four pages.
 
 ## Limitations
 * Targets are annual in the data. targets.csv holds one annual target per facility, so monthly targets couldn't be shown. The Targets vs Actuals view on the overview page compares against annual figures.
-* Testing target comparison mixes years. "Tests Done" counts tests across 2023 and 2024 (737), while the testing target is for 2024 only. Only 365 tests fall in 2024, so the true gap to target is larger than the table suggests. [CONFIRM and adjust if you filtered by year.]
+* Testing target comparison mixes years. "Tests Done" counts tests across 2023 and 2024 (737), while the testing target is for 2024 only. Only 365 tests fall in 2024, so the true gap to target is larger than the table suggests.
 * Pharmacy data covers 2024 only, so stock trends can't be compared with earlier years.
 * Viral load data has no 2024 December tests. The last test date is 29 November 2024, so December is missing from the trend lines.
-* Patients due for refill or review. The model includes Days Until Due and Due This Month columns, but this isn't shown as its own visual yet. [EDIT if you've added it.]
-* Synthetic data. Some patterns may not reflect real programme behaviour.
+* Patients due for refill or review. The model includes Days Until Due and Due This Month columns, but this isn't shown as its own visual yet.
 
 ## Conclusion
 The dashboard gives EndHIV Foundation one place to see programme performance and removes the manual copy-and-paste reporting process. The data points to three priorities: viral suppression and ART initiation are well below the 90% targets, one in four patients misses appointments with incomplete follow-up, and TLD stockouts at two facilities need attention. Because the report reads from a cloud data source, leadership can see these numbers update as new data comes in.
