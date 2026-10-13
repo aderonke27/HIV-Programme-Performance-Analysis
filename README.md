@@ -147,7 +147,7 @@ EndHIV Foundation Datasets
 * [Targets Dataset](./targets.csv)
 * [Viral Load Tests Dataset](./viral_load_tests.csv)
 
-[View Power BI report](./EndHIV Foundation Power BI report.pbix)
+[View Power BI report](./EndHIV_Foundation_PowerBI_report.pbix)
 
 ## Contact Information
 * Email: aladeloyeesther616@gmail.com
