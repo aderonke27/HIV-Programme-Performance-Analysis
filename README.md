@@ -72,7 +72,7 @@ The five tables are linked as a star-style model with facilities as the central 
 * facilities to pharmacy_stock: one to many, linked on facility_id.
 * facilities to targets: one to one, linked on facility_id.
 * patients to viral_load_tests: one to many, linked on patient_id.
-* DateTable to patients: one to many, linked on art_start_date
+* DateTable to patients: one to many, linked on art_start_date.
 Why it's built this way: a patient can have several viral load tests, so tests sit on the "many" side. Facility is the shared dimension, which is what lets every page be filtered or split by facility. Targets are one row per facility per year, so they join one to one.
 
 ## Data Analysis
