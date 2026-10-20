@@ -1,4 +1,4 @@
-## HIV Programme Performance Analysis
+ ## HIV Programme Performance Analysis
 ![Power BI](https://img.shields.io/badge/Tool-Power%20BI-F2C811?style=flat&logo=powerbi&logoColor=black)
 ![Domain](https://img.shields.io/badge/Domain-Healthcare%20Analytics-red)
 
@@ -134,7 +134,6 @@ The dashboard has four pages.
 * Testing target comparison mixes years. "Tests Done" counts tests across 2023 and 2024 (737), while the testing target is for 2024 only. Only 365 tests fall in 2024, so the true gap to target is larger than the table suggests.
 * Pharmacy data covers 2024 only, so stock trends can't be compared with earlier years.
 * Viral load data has no 2024 December tests. The last test date is 29 November 2024, so December is missing from the trend lines.
-* Patients due for refill or review. The model includes Days Until Due and Due This Month columns, but this isn't shown as its own visual yet.
 
 ## Conclusion
 The dashboard gives EndHIV Foundation one place to see programme performance and removes the manual copy-and-paste reporting process. The data points to three priorities: viral suppression and ART initiation are well below the 90% targets, one in four patients misses appointments with incomplete follow-up, and TLD stockouts at two facilities need attention. Because the report reads from a cloud data source, leadership can see these numbers update as new data comes in.
